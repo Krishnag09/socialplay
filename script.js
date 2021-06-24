@@ -27,19 +27,60 @@ function captureEmotion() {
   document.querySelector('#videoElement').style.display = 'block';
   startVideo();
 }
-
+let displaySize;
+let canvas;
 video.addEventListener('play', () => {
-  const canvas = faceapi.createCanvasFromMedia(video)
-  document.body.append(canvas)
-  const displaySize = { width: video.width, height: video.height }
-  faceapi.matchDimensions(canvas, displaySize)
-  setInterval(async () => {
+  canvas = faceapi.createCanvasFromMedia(video);
+  document.body.append(canvas);
+  displaySize = { width: video.width, height: video.height };
+  faceapi.matchDimensions(canvas, displaySize);
+  findEmotion();
+  // setInterval(async () => {
+  //   const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
+  //   // console.log(detections[0].expressions);
+  //   const resizedDetections = faceapi.resizeResults(detections, displaySize)
+  //   canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
+  //   faceapi.draw.drawDetections(canvas, resizedDetections)
+  //   faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
+  //   // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
+  // }, 100)
+});
+
+let emoInterval;
+function findEmotion() {
+  emoInterval = setInterval(async () => {
     const detections = await faceapi.detectAllFaces(video, new faceapi.TinyFaceDetectorOptions()).withFaceLandmarks().withFaceExpressions()
     // console.log(detections[0].expressions);
+    dispEmotion(detections[0].expressions);
     const resizedDetections = faceapi.resizeResults(detections, displaySize)
     canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height)
     faceapi.draw.drawDetections(canvas, resizedDetections)
     faceapi.draw.drawFaceLandmarks(canvas, resizedDetections)
     // faceapi.draw.drawFaceExpressions(canvas, resizedDetections)
-  }, 100)
-})
+  }, 100);
+}
+let emotionDisplayed = false;
+function dispEmotion(emotions) {
+  // console.log(emotions);
+  if (emotions && !emotionDisplayed) {
+    emotionDisplayed = true;
+    let max_confidence = 0;
+    let disp_emotion = '';
+    let keys = Object.keys(emotions);
+    for (let emotion of keys) {
+      if (emotions[emotion] > max_confidence) {
+        disp_emotion = emotion;
+        max_confidence = emotions[emotion];
+      }
+    }
+    console.log(disp_emotion);
+    document.querySelector('#emoResp').innerText = disp_emotion;
+  }
+}
+
+function retry() {
+  document.querySelector('#emoResp').innerText = '';
+  emotionDisplayed = false;
+  clearInterval(emoInterval);
+  findEmotion();
+}
