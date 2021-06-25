@@ -13,6 +13,7 @@ def home():
 def websocketConn(ws):
   while True:
     sentJson = ws.receive()
+    print(sentJson)
     sentData = json.loads(sentJson)
     print(sentData)
     ws.send("got it")
