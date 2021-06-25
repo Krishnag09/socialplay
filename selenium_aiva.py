@@ -184,7 +184,7 @@ def select_key_signature(key_signature):
 
 
 def press_play():
-
+    # time.sleep(5)
     num_of_tracks = 1
 
     for x in range(1,300):
@@ -194,12 +194,18 @@ def press_play():
             num_of_tracks = x-1
             break
 
+    try:
+        track_icon = f'//*[@id="track-view-list"]/div[1]/div/div[{num_of_tracks}]/div/div[2]'
+        WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, track_icon))).click()
+    except:
+        press_play()
 
-    track_icon = f'//*[@id="track-view-list"]/div[1]/div/div[{num_of_tracks}]/div/div[2]'
-    WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, track_icon))).click()
+    try:
+        play_icon = f'//*[@id="track-view-list"]/div[1]/div/div[{num_of_tracks}]/div/div[2]'
+        WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, play_icon))).click()
+    except:
+        press_play()
 
-    play_icon = f'//*[@id="track-view-list"]/div[1]/div/div[{num_of_tracks}]/div/div[2]'
-    WebDriverWait(driver, 20).until(EC.element_to_be_clickable((By.XPATH, play_icon))).click()
 
 
 
