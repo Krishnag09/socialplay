@@ -8,3 +8,4 @@ MarkupSafe==2.0.1
 simple-websocket==0.2.0
 Werkzeug==2.0.1
 wsproto==1.0.0
+selenium==3.141.0
