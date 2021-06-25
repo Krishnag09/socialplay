@@ -20,7 +20,22 @@ def websocketConn(ws):
     print(sentJson)
     sentData = json.loads(sentJson)
     print(sentData)
-    ws.send("got it")
+    moodSet = False
+    for key, value in sentData.items():
+      if key == 'emotion':
+        mood = value
+        genre = sentData['genre']
+        moodSet = True
+    
+    if moodSet:
+      key_signature = mood_dict_engine(mood)
+      selenium_aiva.set_up()
+      selenium_aiva.login()
+      selenium_aiva.create_new_song(genre, key_signature)
+      selenium_aiva.press_play()
+      ws.send("music")
+    else:
+      ws.send("got it")
 
 
 
