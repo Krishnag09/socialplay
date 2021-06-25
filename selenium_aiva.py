@@ -33,6 +33,7 @@ def login():
     driver.find_element_by_xpath(continue_button).click()
     driver.find_element_by_xpath(password_input).send_keys(password)
     driver.find_element_by_xpath(sign_in_button).click()
+    time.sleep(5)
 
 
 def create_new_song(input_genre, key_signature):
