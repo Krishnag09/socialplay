@@ -145,13 +145,13 @@ const durTime = document.querySelector('#durTime');
 let genre;
 function showGenre() {
   genre = document.querySelector('#genre');
-  genre.style.display = 'block';
+  genre.style.display = 'flex';
 }
 
 var selectedGenre;
 function genreSelected(event) {
   sendBack = document.querySelector('#sendBack');
-  sendBack.style.display = 'block';
+  sendBack.style.display = 'flex';
   console.log(event.currentTarget.value);
   selectedGenre = event.currentTarget.value;
 }
