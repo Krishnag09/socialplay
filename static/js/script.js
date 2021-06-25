@@ -2,6 +2,8 @@ const video = document.getElementById('video');
 let captureBtn;
 let videoElement;
 let socket;
+let emoRespDiv;
+let sendBack;
 
 window.onload = function () {
   socket = new WebSocket("ws://127.0.0.1:5000/communicate");
@@ -65,7 +67,9 @@ let canvas = null;
 video.addEventListener('play', () => {
   if (!canvas) {
     canvas = faceapi.createCanvasFromMedia(video);
-    document.body.append(canvas);
+    // document.body.append(canvas);
+    document.querySelector('#allFnsDiv').append(canvas);
+    // videoElement.append(canvas);
     displaySize = { width: video.width, height: video.height };
     faceapi.matchDimensions(canvas, displaySize);
     findEmotion();
@@ -100,6 +104,8 @@ function dispEmotion(emotions) {
       }
     }
     console.log(disp_emotion);
+    emoRespDiv = document.querySelector('#emoRespDiv')
+    emoRespDiv.style.display = 'block';
     document.querySelector('#emoResp').innerText = disp_emotion;
   }
 }
@@ -108,6 +114,9 @@ function retry() {
   document.querySelector('#emoResp').innerText = '';
   emotionDisplayed = false;
   disp_emotion = '';
+  if (genre) {
+    genre.style.display = 'none';
+  }
   clearInterval(emoInterval);
   findEmotion();
 }
@@ -127,9 +136,28 @@ const cover = document.getElementById('cover');
 const currTime = document.querySelector('#currTime');
 const durTime = document.querySelector('#durTime');
 
+let genre;
+function showGenre() {
+  genre = document.querySelector('#genre');
+  genre.style.display = 'block';
+}
+
+var selectedGenre;
+function genreSelected(event) {
+  sendBack = document.querySelector('#sendBack');
+  sendBack.style.display = 'block';
+  console.log(event.currentTarget.value);
+  selectedGenre = event.currentTarget.value;
+}
+
 function sendToBackend() {
-  let toSend = { emotion: disp_emotion };
-  socket.send(JSON.stringify(toSend));
+  let toSend = JSON.stringify({ emotion: disp_emotion, genre: selectedGenre });
+  console.log(toSend);
+  socket.send(toSend);
+  clearAll();
+}
+
+function clearAll() {
   clearInterval(emoInterval);
   canvas.getContext('2d').clearRect(0, 0, canvas.width, canvas.height);
   // var elem = document.querySelector('canvas');
@@ -137,9 +165,19 @@ function sendToBackend() {
   canvas.remove();
   canvas = null;
   captureBtn.style.display = 'block';
+  emoRespDiv.style.display = 'none';
+  genre.style.display = 'none';
+  sendBack.style.display = 'none';
   videoElement.style.display = 'none';
   document.querySelector('#emoResp').innerText = '';
   emotionDisplayed = false;
   disp_emotion = '';
+  let videoEl = document.getElementById('video');
+  stream = videoEl.srcObject;
+  tracks = stream.getTracks();
+  tracks.forEach(function (track) {
+    // stopping every track
+    track.stop();
+  });
+  videoEl.srcObject = null;
 }
-
