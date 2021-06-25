@@ -30,10 +30,31 @@ def create_song():
     mood = request.args.get('mood')
     genre = request.args.get('genre')
     key_signature = mood_dict_engine(mood)
+
+    selenium_aiva.create_new_song(genre, key_signature)
+    try:
+        selenium_aiva.press_play()
+    except:
+        selenium_aiva.press_play()
+
+    return {"message": "success"}
+
+# "localhost:5000/api/setup"
+@app.route("/api/setup", methods=['GET'])
+def setup():
     selenium_aiva.set_up()
     selenium_aiva.login()
-    selenium_aiva.create_new_song(genre, key_signature)
+
+    return {"message": "setting up"}
+
+
+# "localhost:5000/api/play"
+@app.route("/api/play")
+def play():
     selenium_aiva.press_play()
+
+    return "play"
+
 
 
 if __name__ == '__main__':
