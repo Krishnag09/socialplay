@@ -207,6 +207,9 @@ def press_play():
         press_play()
 
 
+def refresh():
+    driver.refresh()
+
 
 
 #login()

@@ -72,6 +72,13 @@ def play():
     return "play"
 
 
+# "localhost:5000/api/play"
+@app.route("/api/refresh")
+def ref():
+    selenium_aiva.refresh()
+
+    return "refresh"
+
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000) # or port=8080
