@@ -32,7 +32,7 @@ def login():
     driver.find_element_by_xpath(sign_in_button).click()
 
 
-def create_new_song(input_genre):
+def create_new_song(input_genre, key_signature):
     # click create track button
     create_track_button = '//*[@id="sidebar"]/div[1]'
     driver.find_element_by_xpath(create_track_button).click()
