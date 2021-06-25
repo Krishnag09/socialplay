@@ -8,6 +8,7 @@ import selenium_aiva
 
 app = Flask(__name__)
 sock = Sock(app)
+selenium_setup = False
 
 @app.route("/")
 def home():
@@ -15,25 +16,38 @@ def home():
 
 @sock.route('/communicate')
 def websocketConn(ws):
+  global selenium_setup
   while True:
     sentJson = ws.receive()
     print(sentJson)
     sentData = json.loads(sentJson)
     print(sentData)
     moodSet = False
+    playPressed = False
     for key, value in sentData.items():
       if key == 'emotion':
         mood = value
         genre = sentData['genre']
         moodSet = True
+      elif key == 'play':
+        playPressed = True
     
     if moodSet:
       key_signature = mood_dict_engine(mood)
-      selenium_aiva.set_up()
-      selenium_aiva.login()
+      
+      if not selenium_setup:
+        selenium_aiva.set_up()
+        selenium_aiva.login()
+        selenium_setup = True
       selenium_aiva.create_new_song(genre, key_signature)
-      selenium_aiva.press_play()
+      try:
+        selenium_aiva.press_play()
+      except:
+        selenium_aiva.press_play()
       ws.send("music")
+    elif playPressed:
+      selenium_aiva.press_play()
+      ws.send("playing")
     else:
       ws.send("got it")
 
