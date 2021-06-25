@@ -1,4 +1,5 @@
 const video = document.getElementById('video');
+const initialSpinner = document.getElementById('initialSpinner');
 let captureBtn;
 let videoElement;
 let socket;
@@ -17,6 +18,9 @@ window.onload = function () {
 
   socket.onmessage = function (event) {
     console.log(`[message] Data received from server: ${event.data}`);
+    if (event.data === 'music') {
+      initialSpinner.style.display = 'none';
+    }
   };
 
   socket.onclose = function (event) {
@@ -60,12 +64,14 @@ function captureEmotion() {
   captureBtn.style.display = 'none';
   videoElement = document.querySelector('#videoElement');
   videoElement.style.display = 'block';
+  initialSpinner.style.display = 'flex';
   startVideo();
 }
 let displaySize;
 let canvas = null;
 video.addEventListener('play', () => {
   if (!canvas) {
+    initialSpinner.style.display = 'none';
     canvas = faceapi.createCanvasFromMedia(video);
     // document.body.append(canvas);
     document.querySelector('#allFnsDiv').append(canvas);
@@ -180,4 +186,5 @@ function clearAll() {
     track.stop();
   });
   videoEl.srcObject = null;
+  initialSpinner.style.display = 'flex';
 }
