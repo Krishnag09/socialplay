@@ -111,7 +111,7 @@ function dispEmotion(emotions) {
     }
     console.log(disp_emotion);
     emoRespDiv = document.querySelector('#emoRespDiv')
-    emoRespDiv.style.display = 'block';
+    emoRespDiv.style.display = 'flex';
     document.querySelector('#emoResp').innerText = disp_emotion;
   }
 }
