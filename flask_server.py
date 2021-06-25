@@ -31,6 +31,7 @@ def create_song():
     mood = request.args.get('mood')
     genre = request.args.get('genre')
     key_signature = mood_dict_engine(mood)
+    selenium_aiva.set_up()
     selenium_aiva.login()
     selenium_aiva.create_new_song(genre, key_signature)
     selenium_aiva.press_play()

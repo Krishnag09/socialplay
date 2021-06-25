@@ -10,9 +10,12 @@ from selenium.webdriver.common.by import By
 chromedriver_location = "chromedriver.exe"
 
 driver = webdriver.Chrome(chromedriver_location)
-driver.get('https://creators.aiva.ai/')
+def set_up():
+    driver.get('https://creators.aiva.ai/')
+    time.sleep(10)
+
 action = ActionChains(driver)
-time.sleep(10)
+
 
 
 email_address = 'kirillmasychev@outlook.com'
@@ -53,13 +56,13 @@ def create_new_song(input_genre, key_signature):
         rock("F# minor")
 
     if input_genre == "electronic":
-        electronic("E minor")
+        electronic(key_signature)
     if input_genre == "hiphop":
-        hiphop("F# minor")
+        hiphop(key_signature)
     if input_genre == "pop":
-        pop("F# minor")
+        pop(key_signature)
     if input_genre == "jazz":
-        jazz("F# minor")
+        jazz(key_signature)
 
     time.sleep(3)
 
@@ -199,10 +202,10 @@ def press_play():
 
 
 
-login()
-time.sleep(3)
-create_new_song('rock')
-press_play()
+#login()
+#time.sleep(3)
+#create_new_song('rock')
+#press_play()
 
 
 
